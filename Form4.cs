@@ -29,5 +29,13 @@ namespace SWJX
         {
             textBox1.Size = new Size(Size.Width - 15, Size.Height - 65);
         }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode==Keys.A && e.Control)
+            {
+                textBox1.SelectAll();
+            }
+        }
     }
 }

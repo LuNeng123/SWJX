@@ -16,10 +16,6 @@ namespace SWJX
             InitializeComponent();
         }
 
-        private void richTextBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void Form2_Load(object sender, EventArgs e)
         {
@@ -31,10 +27,6 @@ namespace SWJX
             richTextBox1.Size = new Size(Size.Width - 15, Size.Height - 65);
         }
 
-        private void richTextBox1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -44,6 +36,19 @@ namespace SWJX
         }
 
         private void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void richTextBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.A)
+            {
+                richTextBox1.SelectAll();
+            }
+        }
+
+        private void richTextBox1_MouseClick(object sender, MouseEventArgs e)
         {
 
         }

@@ -54,7 +54,7 @@ namespace SWJX
             listBox1.SelectedIndex = 0;
             listBox2.SelectedIndex = 0;
             listBox3.SelectedIndex = 0;
-            comboBox4.SelectedIndex = 0;
+            listBox5.SelectedIndex = 0;
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 1;
             comboBox3.SelectedIndex = 0;
@@ -448,8 +448,8 @@ namespace SWJX
             string str0 = dateTimePicker1.Value.ToString("yyyyMMdd");  // 作业日期
             string str_id = textBox01.Text; // rowid
             string str1 = textBox9.Text;  // 任务号
-            string str2 = textBox6.Text.Replace("\n","").Replace("\r","");  // 任务内容
-            string str3 = "99" + comboBox4.Text.Substring(0, 1); //状态
+            string str2 = textBox6.Text.Replace("\n","").Replace("\r","").Trim();  // 任务内容
+            string str3 = "99" + listBox5.Text.Substring(0, 1); //状态
             string str4 = textBox7.Text;  // 作业人员
 
             if (str2.Trim().Length == 0 || str4.Trim().Length == 0)
@@ -477,16 +477,16 @@ namespace SWJX
                 timer1.Enabled = true;
 
                 dateTimePicker1.Refresh();
-                textBox9.Text = "";
+                //textBox9.Text = "";
                 textBox6.Text = "";
-                comboBox4.Text = "";
+                listBox5.Text = "";
                 //textBox7.Text = "";
                 checkBox17.Checked = false;
-                button6.Enabled = false;
-                textBox6.Enabled = false;
+                //button6.Enabled = false;
+                //textBox6.Enabled = false;
                 
             }
-            button10_Click(null, null);
+            mock_btn_10_click();
         }
 
         private void tabControl1_Click(object sender, EventArgs e)
@@ -801,16 +801,16 @@ namespace SWJX
         }
 
 
-
-        private void button10_Click(object sender, EventArgs e)
+        private void mock_btn_10_click()
         {
+
             string rwh = (string)listBox1.SelectedItem;
             richTextBox1.Clear();
             listView1.Items.Clear();
             string str_id = rwh.Split('/')[0].Replace(" ", "");
             string nowstr = rwh.Split('/')[1].Replace(" ", "");
             int nowstr_layers = ms.get_layers(nowstr);
-            string sql0 = "SELECT *, 预计完成时间 as YJ  FROM 任务表 WHERE rowid =" + str_id ;
+            string sql0 = "SELECT *, 预计完成时间 as YJ  FROM 任务表 WHERE rowid =" + str_id;
             MySqlDataReader reader2 = sq.f1(sql0);
             Font oldFont = richTextBox1.SelectionFont;
             Font title_font = new Font(oldFont.FontFamily, 16, FontStyle.Bold);
@@ -820,7 +820,7 @@ namespace SWJX
             ArrayList reader2_arr = new ArrayList();
             while (reader2.Read())
             {
-                Dictionary<string,object> dct0 = new Dictionary<string, object>();
+                Dictionary<string, object> dct0 = new Dictionary<string, object>();
                 dct0.Add("任务号", reader2["任务号"]);
                 dct0.Add("任务内容", reader2["任务内容"]);
                 dct0.Add("状态", reader2["状态"]);
@@ -888,7 +888,7 @@ namespace SWJX
                 string memo = "     " + (string)dct["责任人"] + "   "
                     + (string)dct["支持方"] + "   " + dct["YJ"]
                     + "   " + ((string)dct["备注"]).Replace("\r", "").Replace("\n", " ") + " \n";
-                richTextBox1.AppendText(memo);  
+                richTextBox1.AppendText(memo);
                 richTextBox1.Select(richTextBox1.Text.Length, 0);
                 richTextBox1.SelectionFont = ctt_font;
                 richTextBox1.SelectionColor = Color.DimGray;
@@ -902,7 +902,7 @@ namespace SWJX
                     string output1 = "     ‹ " + state[(int)reader3["作业结果"]]
                         + "   " + reader3["时间"] + "   " + reader3["作业人员"] + " ›    ";
                     string output2 = reader3["时间"] + " " + reader3["作业人员"];
-                    string output3 = ((string)reader3["内容"]).Replace("\n","\t").Replace("\r", "") + "\n";
+                    string output3 = ((string)reader3["内容"]).Replace("\n", "\t").Replace("\r", "") + "\n";
                     string output4 = "[" + state[(int)reader3["作业结果"]] + "] " + output3;
                     richTextBox1.SelectionFont = ctt_font;
                     richTextBox1.SelectionColor = Color.DimGray;
@@ -915,11 +915,11 @@ namespace SWJX
                     if (((string)reader3["user"] == Environment.UserName) && sp.Days <= 5)
                     {
 
-                        listView1.Items.Add(new ListViewItem(new string[] { "可删除 [" + reader3["rowid"].ToString() + "]", output2, output4}));
+                        listView1.Items.Add(new ListViewItem(new string[] { "可删除 [" + reader3["rowid"].ToString() + "]", output2, output4 }));
                     }
                     else
                     {
-                        listView1.Items.Add(new ListViewItem(new string[] { " ", output2, output4}));
+                        listView1.Items.Add(new ListViewItem(new string[] { " ", output2, output4 }));
                     }
                 }
                 reader3.Close();
@@ -928,14 +928,21 @@ namespace SWJX
                     //listView1.Items[listView1.Items.Count - 1].Selected = true;
                     listView1.EnsureVisible(listView1.Items.Count - 1);
                 }
-                
             }
+        }
 
+        private void button10_Click(object sender, EventArgs e)
+        {
+            mock_btn_10_click();
+            Form2 form2 = new Form2();
+            form2.Size = new Size(800, 500);
+            form2.myrft = richTextBox1.Rtf;
+            form2.Show();
         }
 
         private void button11_Click(object sender, EventArgs e)
         {
-            button10_Click(new object(), new EventArgs());
+            mock_btn_10_click();
             Form2 form2 = new Form2();
             form2.Size = new Size(800, 500);
             form2.myrft = richTextBox1.Rtf;
@@ -970,7 +977,8 @@ namespace SWJX
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             listBox1.SelectedIndex = listBox2.SelectedIndex;
-            button10_Click(null, null);
+            mock_btn_10_click();
+            button5_Click(null, null);
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -1647,7 +1655,7 @@ namespace SWJX
                     sq.f2("DELETE FROM 作业流水记录 WHERE rowid=" + (listView1.SelectedItems[0]
                         .SubItems[0].Text).Split(' ')[1].Replace('[', ' ').Replace(']', ' '));
                     MessageBox.Show("已删除");
-                    button10_Click(null, null);
+                    mock_btn_10_click();
                 }
                 
             }
@@ -1657,7 +1665,7 @@ namespace SWJX
         {
             if(e.Button == MouseButtons.Right)
             {
-                textBox6.Text = listView1.SelectedItems[0].SubItems[2].Text;
+                textBox6.Text = listView1.SelectedItems[0].SubItems[2].Text.Split(']')[1].Trim();
             }
         }
 
@@ -1694,6 +1702,11 @@ namespace SWJX
             {
                 textBox6.SelectAll();
             }
+        }
+
+        private void listBox2_Click(object sender, EventArgs e)
+        {
+            //button5_Click(new object(), new EventArgs());
         }
     }
 }
